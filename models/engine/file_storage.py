@@ -1,7 +1,7 @@
-import uuid
 import json
-import os
-
+import uuid
+import datetime
+#from .. import base_model
 
 class FileStorage:
     __file_path = 'file.json'
@@ -11,23 +11,33 @@ class FileStorage:
         return self.__objects
 
     def new(self, obj):
-        ky = f'{type(obj).__name__}.{id(self)}'
-        self.__objects[ky]= obj
+        ky = f'{obj.__class__.__name__}.{obj.__dict__.get("id")}'
+        self.__objects[ky] = obj.to_dict()
+         
+        '''
+        for kh, vl in pd.items():
+            if isinstance(vl, datetime.datetime):
+                pd[kh] = str(vl.isoformat())
+        self.__objects[ky] = pd
+        '''
+
+        objg = obj.to_dict()
+        for rt in objg.keys():
+            print(type(objg[rt]))
+        print(f"{objg}")
+
+        print(f"my pd = {self.__objects}")
 
     def save(self):
-        with open(self.__file_path, 'w') as json_file:
-            json.dump(self.__objects,json_file)
+        json_str = json.dumps(self.__objects)
+
+        with open(self.__file_path, 'w') as jsfile:
+            jsfile.write(json_str)
 
     def reload(self):
         try:
-            with open(self.__file_path, 'r') as file:
-                loaded_objects = json.load(file)
-                for key, obj_dict in loaded_objects.items():
-                    class_name, obj_id = key.split('.')
-                    cls = globals()[class_name]
-                    obj_dict['created_at'] = datetime.strptime(obj_dict['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
-                    obj_dict['updated_at'] = datetime.strptime(obj_dict['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
-                    obj = cls(**obj_dict)
-                    self.__objects[key] = obj
-        except FileNotFoundError:
+            with open (self.__file_path, 'r') as jsfile:
+                json_str = jsfile.read()
+                self.__objects = json.loads(json_str)
+        except Exception:
             pass
