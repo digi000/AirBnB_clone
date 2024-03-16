@@ -6,15 +6,18 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb)'
 
     def emptyline(self):
-        """An empty line + ENTER shouldn’t execute anything"""
+        """An empty line + ENTER shouldn’t execute anything
+        """
         pass
 
     def do_quit(self, arg):
-        '''Quit command to exit the program'''
+        '''Quit command to exit the program
+        '''
         return True
 
     def do_EOF(self, arg):
-        '''Exit the program when EOF (Ctrl+D) is reached'''
+        '''Exit the program when EOF (Ctrl+D) is reached
+        '''
         print()
         return True
 
