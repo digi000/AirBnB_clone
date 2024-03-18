@@ -1,0 +1,9 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    min-height: 100vh; 
+    display:flex;
+    flex-direction: column;
+    font-color: #484848;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
