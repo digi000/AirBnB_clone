@@ -1,0 +1,17 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    min-height: 100vh; 
+    display:flex;
+    flex-direction: column;
+    font-color: #484848;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.contianer{
+    max-width: 1000px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
