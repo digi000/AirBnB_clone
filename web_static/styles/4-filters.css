@@ -1,26 +1,28 @@
-.filters {
-    background-color: white;
+.filters{
+    color: blue;
     height: 70px;
     width: 100%;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
+    position: relative;
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-end;
-    padding-right: 30px;
 }
 
-button {
+.filters button{
     font-size: 18px;
     background-color: #FF5A5F;
-    color: white;
+    color: #FFFFFF;
     height: 48px;
     width: 20%;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
+    right: 30px;
+    position: absolute;
+    opacity: 1;
 }
 
-button:hover {
+.filters button:hover{
     opacity: 0.9;
 }
