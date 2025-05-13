@@ -8,8 +8,10 @@ class BaseModel:
         """intializer"""
         if kwargs:
             self.id = kwargs["id"]
-            self.my_number = kwargs["my_number"]
-            self.name = kwargs["name"]
+            if hasattr(self, "my_number"):
+                self.my_number = kwargs["my_number"]
+            if hasattr(self, "name"):
+                self.name = kwargs["name"]
             self.created_at = datetime.strptime(kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
             self.updated_at = datetime.strptime(kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
         else:

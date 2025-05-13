@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """py shell"""
-import cmd
+import cmd, json
+from models.base_model import BaseModel
+from models import storage
 class HBNBCommand(cmd.Cmd):
     """class shell"""
     prompt = "(hbnb) "
@@ -12,5 +14,96 @@ class HBNBCommand(cmd.Cmd):
         return True
     def emptyline(self):
         pass
+    def do_create(self, line):
+        if line == "BaseModel":
+            i1 = BaseModel()
+            i1.save()
+            print(i1.id)
+        elif line == "":
+            print("** class name missing **")
+        else:
+            print("** class doesn't exist **")
+    
+    def do_show (self, line):
+        if len(line.split()) == 0:
+            print("** class name missing **")
+        elif line.split()[0] != "BaseModel":
+            print("** class doesn't exist **")
+        elif len(line.split()) == 1:
+            print("** instance id missing **")
+        else:
+            line1 = line.replace(' ', '.')
+            with open("file.json", 'r') as f:
+                text = f.read()
+                if text:
+                    objs = json.loads(text)
+                    if line1 in objs:
+                        vl = objs[line1]
+                        df = BaseModel(**vl)
+                        print(df)
+                    else:
+                        print("** no instance found **")
+
+    def do_destory(self, line):
+        if len(line.split()) == 0:
+            print("** class name missing **")
+        elif line.split()[0] != "BaseModel":
+            print("** class doesn't exist **")
+        elif len(line.split()) == 1:
+            print("** instance id missing **")
+        else:
+            line1 = line.replace(' ', '.')
+            with open("file.json", 'r') as f:
+                text = f.read()
+                if text:
+                    objs = json.loads(text)
+                    if line1 in objs:
+                        del objs[line1]
+                        with open("file.json", 'w') as f:
+                            f.write(json.dumps(objs))
+                    else:
+                        print("** no instance found **")
+
+    def do_all(self, line):
+        if line == "" or line == "BaseModel":
+            with open("file.json", 'r') as f:
+                text = f.read()
+                if text:
+                    objs = json.loads(text)
+                    if objs:
+                        ty = []
+                        for key, value in objs.items():
+                            my_model = BaseModel(**value)
+                            ty.append(my_model.__str__())
+                        print(ty)
+        else:
+            print("** class doesn't exist **")
+    def do_update(self, line):
+        if len(line.split()) == 0:
+            print("** class name missing **")
+        elif line.split()[0] != "BaseModel":
+            print("** class doesn't exist **")
+        elif len(line.split()) == 1 and line.split()[0] == "BaseModel":
+            print("** instance id missing **")
+        else:
+            ds = line.split()
+            line1 = ds[0]+'.'+ds[1]
+            with open("file.json", 'r') as f:
+                text = f.read()
+                if text:
+                    objs = json.loads(text)
+                    if line1 in objs:
+                        if len(line.split()) < 3:
+                            print("** attribute name missing **")
+                        else:
+                            if line.split()[2] in objs[line1]:
+                                if len(line.split()) < 4:
+                                    print("** value missing **")
+                                else:
+                                    objs[line1][line.split()[2]] = line.split()[3]
+                        with open("file.json", 'w') as f:
+                            f.write(json.dumps(objs))
+                    else:
+                        print("** no instance found **")
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
