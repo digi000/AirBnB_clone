@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """py shell"""
-import cmd, json
+import cmd, json, os
 from models.base_model import BaseModel
 from models import storage
 class HBNBCommand(cmd.Cmd):
@@ -33,18 +33,21 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
         else:
             line1 = line.replace(' ', '.')
-            with open("file.json", 'r') as f:
-                text = f.read()
-                if text:
-                    objs = json.loads(text)
-                    if line1 in objs:
-                        vl = objs[line1]
-                        df = BaseModel(**vl)
-                        print(df)
-                    else:
-                        print("** no instance found **")
+            if os.path.exists("file.json"):
+                with open("file.json", 'r') as f:
+                    text = f.read()
+                    if text:
+                        objs = json.loads(text)
+                        if line1 in objs:
+                            vl = objs[line1]
+                            df = BaseModel(**vl)
+                            print(df)
+                        else:
+                            print("** no instance found **")
+            else:
+                print("** no instance found **")
 
-    def do_destory(self, line):
+    def do_destroy(self, line):
         if len(line.split()) == 0:
             print("** class name missing **")
         elif line.split()[0] != "BaseModel":
