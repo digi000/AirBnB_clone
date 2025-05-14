@@ -2,10 +2,12 @@
 """py shell"""
 import cmd, json, os
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 class HBNBCommand(cmd.Cmd):
     """class shell"""
     prompt = "(hbnb) "
+    clas = {'BaseModel': BaseModel, 'User': User}
     def do_quit(self, line):
         """quit"""
         return True
@@ -15,8 +17,8 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         pass
     def do_create(self, line):
-        if line == "BaseModel":
-            i1 = BaseModel()
+        if line in self.clas:
+            i1 = self.clas[line]()
             i1.save()
             print(i1.id)
         elif line == "":
@@ -27,7 +29,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show (self, line):
         if len(line.split()) == 0:
             print("** class name missing **")
-        elif line.split()[0] != "BaseModel":
+        elif line.split()[0] not in  self.clas:
             print("** class doesn't exist **")
         elif len(line.split()) == 1:
             print("** instance id missing **")
@@ -40,7 +42,7 @@ class HBNBCommand(cmd.Cmd):
                         objs = json.loads(text)
                         if line1 in objs:
                             vl = objs[line1]
-                            df = BaseModel(**vl)
+                            df = self.clas[line](**vl)
                             print(df)
                         else:
                             print("** no instance found **")
@@ -50,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self, line):
         if len(line.split()) == 0:
             print("** class name missing **")
-        elif line.split()[0] != "BaseModel":
+        elif line.split()[0] not in self.clas:
             print("** class doesn't exist **")
         elif len(line.split()) == 1:
             print("** instance id missing **")
@@ -68,7 +70,7 @@ class HBNBCommand(cmd.Cmd):
                         print("** no instance found **")
 
     def do_all(self, line):
-        if line == "" or line == "BaseModel":
+        if line == "" or line in self.clas:
             with open("file.json", 'r') as f:
                 text = f.read()
                 if text:
@@ -76,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
                     if objs:
                         ty = []
                         for key, value in objs.items():
-                            my_model = BaseModel(**value)
+                            my_model = self.clas[line](**value)
                             ty.append(my_model.__str__())
                         print(ty)
         else:
@@ -84,9 +86,9 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         if len(line.split()) == 0:
             print("** class name missing **")
-        elif line.split()[0] != "BaseModel":
+        elif line.split()[0] not in self.clas:
             print("** class doesn't exist **")
-        elif len(line.split()) == 1 and line.split()[0] == "BaseModel":
+        elif len(line.split()) == 1 and line.split()[0] in self.clas:
             print("** instance id missing **")
         else:
             ds = line.split()
