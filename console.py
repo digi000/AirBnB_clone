@@ -4,10 +4,15 @@ import cmd, json, os
 from models.base_model import BaseModel
 from models.user import User
 from models import storage
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+
 class HBNBCommand(cmd.Cmd):
     """class shell"""
     prompt = "(hbnb) "
-    clas = {'BaseModel': BaseModel, 'User': User}
+    clas = {'BaseModel': BaseModel, 'User': User, 'Amenity': Amenity, 'City': City, 'Place': Place, 'Review': Review}
     def do_quit(self, line):
         """quit"""
         return True
@@ -42,7 +47,7 @@ class HBNBCommand(cmd.Cmd):
                         objs = json.loads(text)
                         if line1 in objs:
                             vl = objs[line1]
-                            df = self.clas[line](**vl)
+                            df = self.clas[line.split()[0]](**vl)
                             print(df)
                         else:
                             print("** no instance found **")
@@ -50,6 +55,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_destroy(self, line):
+        """Useage: destroy <class name> <id>"""
         if len(line.split()) == 0:
             print("** class name missing **")
         elif line.split()[0] not in self.clas:
@@ -78,7 +84,7 @@ class HBNBCommand(cmd.Cmd):
                     if objs:
                         ty = []
                         for key, value in objs.items():
-                            my_model = self.clas[line](**value)
+                            my_model = self.clas[key.split('.')[0]](**value)
                             ty.append(my_model.__str__())
                         print(ty)
         else:
